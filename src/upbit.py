@@ -1,25 +1,31 @@
 import requests
 import json
 
+#https://docs.upbit.com/v1.0.3/reference#%EB%B6%84minute-%EC%BA%94%EB%93%A4-1
+#https://systemtraders.tistory.com/648
+
+
 class UpbitClass:
     def __init__(self):
-        self.num = 200
-        self.time = '15m'
-        self.markets = []
-        self.prices = {}
-        # self.prices['KRW-XEM'][200]['openingPrice']
-        # store latest 200 items (15m). Having 5 data => openingPrice, highPrice, lowPrice, tradePrice, candleAccTradeVolume
-
-
-        # read saved data
-        # if saved data has different value of num or time, delete it and save new one
+        self.num = '50'
+        self.timeunit = 'minutes'
+        self.timeinterval = '15'
+        """
+        time interval for minute: 1, 3, 5, 15, 10, 30, 60, 240
+        
+        """
 
     def GetMarkets(self):
         #get markets info
-        pass
+        url = 'https://api.upbit.com/v1/market/all'
+
+        response = requests.get(url).json()
+        return response
 
     def GetPrices(self,market):
         #get price and volume info and save it to json
-        pass
+        url = 'https://api.upbit.com/v1/candles/' + self.timeunit + '/'+ self.timeinterval +'?market='+ market +'&count=' + self.num
 
-
+        response = requests.get(url).json()
+        response.reverse()
+        return json.dumps(response)
