@@ -10,6 +10,9 @@ class UpbitClass:
         self.num = '50'
         self.timeunit = 'minutes'
         self.timeinterval = '15'
+        self.markets = []
+        self.prices = {}
+
         """
         time interval for minute: 1, 3, 5, 15, 10, 30, 60, 240
         
