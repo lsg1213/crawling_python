@@ -54,7 +54,9 @@ print(analyze.candle)
 price_json = json.loads(price)
 low = find_low(price_json)
 high = find_high(price_json)
-print(price_json[0])
+_cci=CCI(price_json)
+cci_low = min(_cci)
+cci_high = max(_cci)
 
 #####make chart with matplotlib######
 fig = plt.figure(figsize=(12, 8))
@@ -69,14 +71,16 @@ axes[0].get_xaxis().set_visible(False)
 candlestick_ohlc(axes[0], analyze.candle, width=0.5, colorup='r', colordown='b')
 axes[0].plot(analyze.x, ma(price_json,5), color = 'green', marker='o',linestyle='solid', label='ma5')
 axes[0].plot(analyze.x, ma(price_json,20), color = 'red', marker='o',linestyle='solid', label='ma20')
-axes[0].set_ylim(low - low*0.002, high + high*0.002)
+axes[0].set_ylim(low + low*0.002, high + high*0.002)
 
 axes[1].bar(analyze.x, analyze.volume, color='k', width=0.6, align='center')
 axes[1].title.set_text('transaction amount')
 
 #You can change period of cci, 14 days is default
-axes[2].plot(analyze.x, CCI(price_json), color = 'red', marker='o', linestyle='solid', label='cci')
-axes[2].set_ylim(-1200, 1200)
+axes[2].plot(analyze.x, _cci, color = 'red', marker='o', linestyle='solid', label='cci')
+axes[2].plot(analyze.x, [100 for _ in range(len(price_json))], color = 'k', marker='o', linestyle='dotted', label='limit_high')
+axes[2].plot(analyze.x, [-100 for _ in range(len(price_json))], color = 'k', marker='o', linestyle='dotted', label='limit_low')
+axes[2].set_ylim(cci_low+cci_low*0.1, cci_high+cci_high*0.1)
 axes[2].title.set_text('cci')
 #####################################
 

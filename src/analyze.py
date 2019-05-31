@@ -84,3 +84,4 @@ def CCI(price_json, ndays=14):
             CCI.append(0)
     return CCI
 
+
