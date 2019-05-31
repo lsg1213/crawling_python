@@ -1,9 +1,8 @@
 from upbit import UpbitClass
-from analyze import AnalizeClass, ma, find_high, find_low, CCI
+from analyze import AnalizeClass
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from mpl_finance import candlestick_ohlc
-import json
 
 # TODO: Init upbit class
 upbit = UpbitClass()
@@ -46,17 +45,10 @@ while True:
 price = upbit.GetPrices(markets[select]['market'])
 
 analyze = AnalizeClass(price)
-######################
-#이 부분 출력 해보면 좨다 0 나옴 비트코인이랑 대시(1,2)만 제대로 나온다.
-print(analyze.candle)
 
-# price_json: list->dict type of price
-price_json = json.loads(price)
-low = find_low(price_json)
-high = find_high(price_json)
-_cci=CCI(price_json)
-cci_low = min(_cci)
-cci_high = max(_cci)
+
+
+
 
 #####make chart with matplotlib######
 fig = plt.figure(figsize=(12, 8))
@@ -69,17 +61,18 @@ axes.append(plt.subplot(gs[2], sharex=axes[0]))
 axes[0].get_xaxis().set_visible(False)
 
 candlestick_ohlc(axes[0], analyze.candle, width=0.5, colorup='r', colordown='b')
-axes[0].plot(analyze.x, ma(price_json,5), color = 'green', marker='o',linestyle='solid', label='ma5')
-axes[0].plot(analyze.x, ma(price_json,20), color = 'red', marker='o',linestyle='solid', label='ma20')
-axes[0].set_ylim(low + low*0.002, high + high*0.002)
+axes[0].plot(analyze.x, analyze.ma(5), color = 'green', marker='o',linestyle='solid', label='ma5')
+axes[0].plot(analyze.x, analyze.ma(20), color = 'red', marker='o',linestyle='solid', label='ma20')
+axes[0].set_ylim(analyze.low * 1.002, analyze.high * 1.002)
 
 axes[1].bar(analyze.x, analyze.volume, color='k', width=0.6, align='center')
 axes[1].title.set_text('transaction amount')
 
 #You can change period of cci, 14 days is default
+_cci, cci_low, cci_high = analyze.CCI()
 axes[2].plot(analyze.x, _cci, color = 'red', marker='o', linestyle='solid', label='cci')
-axes[2].plot(analyze.x, [100 for _ in range(len(price_json))], color = 'k', marker='o', linestyle='dotted', label='limit_high')
-axes[2].plot(analyze.x, [-100 for _ in range(len(price_json))], color = 'k', marker='o', linestyle='dotted', label='limit_low')
+axes[2].plot(analyze.x, [100 for _ in range(len(analyze.price_json))], color = 'k', marker='o', linestyle='dotted', label='limit_high')
+axes[2].plot(analyze.x, [-100 for _ in range(len(analyze.price_json))], color = 'k', marker='o', linestyle='dotted', label='limit_low')
 axes[2].set_ylim(cci_low+cci_low*0.1, cci_high+cci_high*0.1)
 axes[2].title.set_text('cci')
 #####################################

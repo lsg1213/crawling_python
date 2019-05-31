@@ -26,7 +26,13 @@ class UpbitClass:
         except:
             print('There is a error to get data, or url is wrong')
             exit()
-        return response
+
+        market = []
+        for name in response:
+            if name['market'][:4] == 'KRW-':
+                market.append(name)
+
+        return market
 
     def GetPrices(self,market):
         #get price and volume info and save it to json
