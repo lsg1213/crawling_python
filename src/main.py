@@ -21,7 +21,7 @@ while True:
         select = input('Market number or English name: ')
         if int(select) <= 10 and int(select) >= 1:
             select = int(select)
-            price = upbit.GetPrices(markets[select]['market'])
+            
             break
         print('Please put the number <= 10 and >= 1')
         print('Or put the English name of coin')
@@ -43,13 +43,12 @@ while True:
             print('Put the right name or number again')
     print('--------------------------------------------------------------')
     
-        
+price = upbit.GetPrices(markets[select]['market'])
 
 analyze = AnalizeClass(price)
 ######################
 #이 부분 출력 해보면 좨다 0 나옴 비트코인이랑 대시(1,2)만 제대로 나온다.
 print(analyze.candle)
-exit()
 
 # price_json: list->dict type of price
 price_json = json.loads(price)
