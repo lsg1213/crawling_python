@@ -2,17 +2,12 @@ import numpy as np
 import pandas as pd
 
 
-
 class AnalizeClass:
     def __init__(self,price):
         self.price = pd.read_json(price)
         self.x = np.arange(len(self.price.index))
         self.candle = self.Candle()
         self.volume = self.Volume()
-        self.ma5 = self.MA5()
-        self.ma20 = self.MA20()
-        self.rsi = self.RSI()
-        self.cci = self.CCI()
         self.macd = self.MACD()
 
     def Candle(self): #data for candle
@@ -23,11 +18,7 @@ class AnalizeClass:
     def Volume(self): #data for volume
         return self.price.candle_acc_trade_volume
 
-    def RSI(self): #Relative Strength Index (상대강도지수)
-        pass
-
-    def CCI(self):
-        pass
+    
 
     def MACD(self):
         pass
@@ -60,3 +51,45 @@ def find_high(price_json):
         if tmp < price_json[i]['high_price']:
             tmp = price_json[i]['high_price']
     return tmp
+
+def CCI(price_json, ndays):
+    M = []
+    SM = []
+    D = []
+    CCI = []
+    N = 20
+    for i in range(len(price_json)):
+        M.append((price_json[i]['high_price'] + price_json[i]['low_price'] + price_json[i]['opening_price']) / 3)
+    
+    for i in range(ndays-1):
+        SM.append(0)
+    for i in range(ndays-1, len(price_json)):
+        sum = 0
+        for j in range(i - ndays + 1, i + 1):
+            sum += M[j]
+        sum /= ndays
+        SM.append(sum)
+
+    for i in range(N-1):
+        D.append(0)
+    for i in range(N-1, len(price_json)):
+        sum = 0
+        for j in range(i - N + 1, i + 1):
+            sum += M[j] - SM[j]
+        sum /= N
+        D.append(sum)
+    
+    
+
+    for i in range(len(price_json)):
+        try:
+            CCI.append((M[i]-SM[i])/(0.015*D[i]))
+        except ZeroDivisionError:
+            CCI.append(0)
+    '''
+    print('M is', M,'\nSM is ',SM,'\nD is ',D,'\nCCI is',CCI)
+    print(len(CCI))
+    exit()
+    '''
+    return CCI
+
