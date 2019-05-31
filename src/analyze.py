@@ -8,7 +8,6 @@ class AnalizeClass:
         self.x = np.arange(len(self.price.index))
         self.candle = self.Candle()
         self.volume = self.Volume()
-        self.macd = self.MACD()
 
     def Candle(self): #data for candle
         ohlc = self.price[['opening_price', 'high_price', 'low_price', 'trade_price']].astype(int).values
@@ -19,9 +18,6 @@ class AnalizeClass:
         return self.price.candle_acc_trade_volume
 
     
-
-    def MACD(self):
-        pass
 
 
 def ma(price_json, number):
@@ -52,7 +48,7 @@ def find_high(price_json):
             tmp = price_json[i]['high_price']
     return tmp
 
-def CCI(price_json, ndays):
+def CCI(price_json, ndays=14):
     M = []
     SM = []
     D = []
@@ -86,10 +82,5 @@ def CCI(price_json, ndays):
             CCI.append((M[i]-SM[i])/(0.015*D[i]))
         except ZeroDivisionError:
             CCI.append(0)
-    '''
-    print('M is', M,'\nSM is ',SM,'\nD is ',D,'\nCCI is',CCI)
-    print(len(CCI))
-    exit()
-    '''
     return CCI
 

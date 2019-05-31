@@ -9,16 +9,47 @@ import json
 upbit = UpbitClass()
 
 markets = upbit.GetMarkets()
+print('---------------------------------------------------------------')
 print('##Please choose a market')
-
-for i in range(10):
-    print(i+1,'-',markets[i]['market'],markets[i]['korean_name'])
-
-select = int(input('Market number: ')) - 1
-
-price = upbit.GetPrices(markets[select]['market'])
+print('##Or if you want to know other coin then put the English name')
+print('---------------------------------------------------------------')
+while True:
+    
+    for i in range(10):
+        print(i+1,'-',markets[i]['market'],markets[i]['korean_name'])
+    try:
+        select = input('Market number or English name: ')
+        if int(select) <= 10 and int(select) >= 1:
+            select = int(select)
+            price = upbit.GetPrices(markets[select]['market'])
+            break
+        print('Please put the number <= 10 and >= 1')
+        print('Or put the English name of coin')
+        continue
+    except ValueError:
+        if select.isalpha():
+            for i in range(len(markets)):
+                if markets[i]['english_name'] == select:
+                    select = i
+                if type(select) == int:
+                    break
+            if type(select) == int:
+                break
+            print('There is no coin that you typed the name')
+            print('Put the right name again')
+            
+        else:
+            print('You put wrong input')
+            print('Put the right name or number again')
+    print('--------------------------------------------------------------')
+    
+        
 
 analyze = AnalizeClass(price)
+######################
+#이 부분 출력 해보면 좨다 0 나옴 비트코인이랑 대시(1,2)만 제대로 나온다.
+print(analyze.candle)
+exit()
 
 # price_json: list->dict type of price
 price_json = json.loads(price)
@@ -44,8 +75,9 @@ axes[0].set_ylim(low - low*0.002, high + high*0.002)
 axes[1].bar(analyze.x, analyze.volume, color='k', width=0.6, align='center')
 axes[1].title.set_text('transaction amount')
 
-axes[2].plot(analyze.x, CCI(price_json, 14), color = 'red', marker='o', linestyle='solid', label='cci')
-axes[2].set_ylim(-500, 500)
+#You can change period of cci, 14 days is default
+axes[2].plot(analyze.x, CCI(price_json), color = 'red', marker='o', linestyle='solid', label='cci')
+axes[2].set_ylim(-1200, 1200)
 axes[2].title.set_text('cci')
 #####################################
 

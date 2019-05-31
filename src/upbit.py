@@ -21,8 +21,11 @@ class UpbitClass:
     def GetMarkets(self):
         #get markets info
         url = 'https://api.upbit.com/v1/market/all'
-
-        response = requests.get(url).json()
+        try:
+            response = requests.get(url).json()
+        except:
+            print('There is a error to get data, or url is wrong')
+            exit()
         return response
 
     def GetPrices(self,market):
