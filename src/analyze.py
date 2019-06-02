@@ -17,6 +17,8 @@ class AnalizeClass:
     def Candle(self): #data for candle
         ohlc = self.price[['opening_price', 'high_price', 'low_price', 'trade_price']].astype(int).values
         dohlc = np.hstack((np.reshape(self.x, (-1, 1)), ohlc))
+        print((np.reshape(self.x, (-1, 1)), ohlc))
+        print(dohlc)
         return dohlc
 
     def Volume(self): #data for volume
