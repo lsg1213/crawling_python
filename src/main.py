@@ -26,20 +26,17 @@ while True:
         print('Or put the English name of coin')
         continue
     except ValueError:
-        if select.isalpha():
-            for i in range(len(markets)):
-                if markets[i]['english_name'] == select:
-                    select = i
-                if type(select) == int:
-                    break
+        
+        for i in range(len(markets)):
+            if markets[i]['english_name'] == select:
+                select = i
             if type(select) == int:
                 break
-            print('There is no coin that you typed the name')
-            print('Put the right name again')
+        if type(select) == int:
+            break
+        print('There is no coin that you typed the name')
+        print('Put the right name again')
             
-        else:
-            print('You put wrong input')
-            print('Put the right name or number again')
     print('--------------------------------------------------------------')
     
 price = upbit.GetPrices(markets[select]['market'])
@@ -63,7 +60,7 @@ axes[0].get_xaxis().set_visible(False)
 candlestick_ohlc(axes[0], analyze.candle, width=0.5, colorup='r', colordown='b')
 axes[0].plot(analyze.x, analyze.ma(5), color = 'green', marker='o',linestyle='solid', label='ma5')
 axes[0].plot(analyze.x, analyze.ma(20), color = 'red', marker='o',linestyle='solid', label='ma20')
-axes[0].set_ylim(analyze.low * 1.002, analyze.high * 1.002)
+axes[0].set_ylim(analyze.low * 0.998, analyze.high * 1.002)
 
 axes[1].bar(analyze.x, analyze.volume, color='k', width=0.6, align='center')
 axes[1].title.set_text('transaction amount')
@@ -73,7 +70,7 @@ _cci, cci_low, cci_high = analyze.CCI()
 axes[2].plot(analyze.x, _cci, color = 'red', marker='o', linestyle='solid', label='cci')
 axes[2].plot(analyze.x, [100 for _ in range(len(analyze.price_json))], color = 'k', marker='o', linestyle='dotted', label='limit_high')
 axes[2].plot(analyze.x, [-100 for _ in range(len(analyze.price_json))], color = 'k', marker='o', linestyle='dotted', label='limit_low')
-axes[2].set_ylim(cci_low+cci_low*0.1, cci_high+cci_high*0.1)
+axes[2].set_ylim(cci_low*0.9, cci_high*1.1)
 axes[2].title.set_text('cci')
 #####################################
 
