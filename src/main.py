@@ -46,7 +46,6 @@ analyze = AnalizeClass(price)
 
 
 
-
 #####make chart with matplotlib######
 fig = plt.figure(figsize=(12, 8))
 fig.set_facecolor('w')
@@ -58,8 +57,8 @@ axes.append(plt.subplot(gs[2], sharex=axes[0]))
 axes[0].get_xaxis().set_visible(False)
 
 candlestick_ohlc(axes[0], analyze.candle, width=0.5, colorup='r', colordown='b')
-axes[0].plot(analyze.x, analyze.ma(5), color = 'green', marker='o',linestyle='solid', label='ma5')
-axes[0].plot(analyze.x, analyze.ma(20), color = 'red', marker='o',linestyle='solid', label='ma20')
+axes[0].plot(analyze.x[5:], analyze.ma(5)[5:], color = 'green', marker='o',linestyle='solid', label='ma5')
+axes[0].plot(analyze.x[20:], analyze.ma(20)[20:], color = 'red', marker='o',linestyle='solid', label='ma20')
 axes[0].set_ylim(analyze.low * 0.998, analyze.high * 1.002)
 
 axes[1].bar(analyze.x, analyze.volume, color='k', width=0.6, align='center')
